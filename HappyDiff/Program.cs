@@ -17,6 +17,7 @@ namespace HappyDiff
             //-noform
             if (args != null && args.Any(s => string.Equals(s, "-noform", StringComparison.CurrentCultureIgnoreCase)))
             {
+                AsyncHelpers.RunSync(() => Controller.Run());
               
 #if DEBUG
                 Console.ReadKey();
