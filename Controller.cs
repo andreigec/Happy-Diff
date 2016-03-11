@@ -30,7 +30,8 @@ namespace HappyDiff
 
         public static async Task<List<APICall>> GetApis()
         {
-            var items = ((await c.Get<List<APICall>>("apis"))?.OrderBy(s => s.Name).ToList()) ?? new List<APICall>();
+            var c1 = (await c.Get<List<APICall>>("apis"));
+            var items = (c1?.OrderBy(s => s.Name).ToList()) ?? new List<APICall>();
             return items;
         }
 

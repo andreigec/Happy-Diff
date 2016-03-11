@@ -114,7 +114,15 @@ namespace HappyDiff
                 return jsonresultitem;
             }
 
-            JsonDifferenceReport(d1, d2, jsonresultitem, "root");
+            try
+            {
+                JsonDifferenceReport(d1, d2, jsonresultitem, "root");
+            }
+            catch (Exception ex)
+            {
+                jsonresultitem.AddItemAPI2(JSONWarnLevel.Fatal, "error diffing json", ex);
+                return jsonresultitem;
+            }
 
             if (jsonresultitem.Messages.Any())
             {
