@@ -19,11 +19,12 @@ namespace HappyDiff
             l.Info($"Starting execution\r\ntests:");
             foreach (var t in items)
             {
-                l.Info($"Test:{t.Name}");
-                l.Info($"API1=:{t.API1}");
-                l.Info($"API2=:{t.API2}");
+                l.Trace("");
+                l.Info($"{t.Name} API1=:{t.API1}");
+                l.Info($"{t.Name} API2=:{t.API2}");
                 var res = await JSONDiffHelpers.Process(t);
-                ProcessResults(res, l);
+                ProcessResults(res, l, t);
+                l.Trace("");
             }
             l.Info($"\r\nFinished execution");
         }
@@ -40,16 +41,16 @@ namespace HappyDiff
             await c.Set("apis", items);
         }
 
-        public static void ProcessResults(JSONDiff jd, Logger l)
+        public static void ProcessResults(JSONDiff jd, Logger l, APICall t)
         {
             if (jd.Messages.Any())
             {
-                l.Info("--Issues--");
+                l.Info($"--Issues--");
                 jd.Messages.ForEach(s2 =>
                 {
                     var mess = s2.Message?.Trim();
                     var exp = s2.Exception?.Trim();
-                    var m = $"{s2.ProblemType} | {mess} | {exp}";
+                    var m = $"{t.Name} {s2.ProblemType} | {mess} | {exp}";
                     m = m.Replace("\r\n", "");
                     switch (s2.WarnLevel)
                     {
@@ -66,18 +67,13 @@ namespace HappyDiff
                             throw new ArgumentOutOfRangeException();
                     }
                 });
-                l.Info("-----------");
+                l.Info($"-----------");
             }
             else
             {
-                l.Info("--Success--");
-                l.Info("-----------");
+                l.Info($"--Success--");
+                l.Info($"-----------");
             }
-        }
-
-        public static void ProcessResults(List<JSONDiff> res, Logger l)
-        {
-            res.ForEach(s => { ProcessResults(s, l); });
         }
     }
 }
